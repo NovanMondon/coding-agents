@@ -1,0 +1,3 @@
+[submodule "vendor/seraphr-agent-skills"]
+	path = vendor/seraphr-agent-skills
+	url = https://github.com/seraphr/agent-skills.git

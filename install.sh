@@ -3,6 +3,7 @@ set -euo pipefail
 
 repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
+system_config="/etc/codex/config.toml"
 
 check_link() {
   local source_path="$1"
@@ -27,18 +28,33 @@ check_link() {
 create_link() {
   local source_path="$1"
   local target_path="$2"
+  shift 2
 
   if [ -L "$target_path" ]; then
     return
   fi
 
-  mkdir -p "$(dirname -- "$target_path")"
-  ln -s "$source_path" "$target_path"
+  "$@" mkdir -p "$(dirname -- "$target_path")"
+  "$@" ln -sT -- "$source_path" "$target_path"
   printf 'coding-agents: linked %s -> %s\n' "$target_path" "$source_path"
 }
 
 check_link "$repo_dir/AGENTS.md" "$codex_home/AGENTS.md"
 check_link "$repo_dir/codex/skills" "$HOME/.agents/skills"
+check_link "$repo_dir/codex/config.toml" "$system_config"
+
+# /etc への初回配置だけ管理者権限を使う
+if [ ! -L "$system_config" ]; then
+  system_command=()
+  if [ "$EUID" -ne 0 ]; then
+    if ! command -v sudo >/dev/null 2>&1; then
+      printf 'coding-agents: sudo is required to install %s\n' "$system_config" >&2
+      exit 1
+    fi
+    system_command=(sudo)
+  fi
+  create_link "$repo_dir/codex/config.toml" "$system_config" "${system_command[@]}"
+fi
 
 create_link "$repo_dir/AGENTS.md" "$codex_home/AGENTS.md"
 create_link "$repo_dir/codex/skills" "$HOME/.agents/skills"

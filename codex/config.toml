@@ -1,0 +1,10 @@
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+service_tier = "default"
+
+[tui.keymap.composer]
+submit = "ctrl-enter"
+
+[tui]
+status_line = ["model", "reasoning", "current-dir", "thread-name", "context-used", "five-hour-limit", "weekly-limit", "fast-mode", "permissions", "approval-mode", "codex-version"]
+status_line_use_colors = true

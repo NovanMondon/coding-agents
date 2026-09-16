@@ -6,5 +6,8 @@ service_tier = "default"
 submit = "ctrl-enter"
 
 [tui]
+notifications = ["agent-turn-complete"]
+notification_method = "osc9"
+notification_condition = "always"
 status_line = ["model", "reasoning", "current-dir", "thread-name", "context-used", "five-hour-limit", "weekly-limit", "fast-mode", "permissions", "approval-mode", "codex-version"]
 status_line_use_colors = true

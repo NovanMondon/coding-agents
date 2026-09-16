@@ -30,7 +30,7 @@ root以外で実行するDev Containerでは、対話なしで`sudo`を使える
 
 ## 共通設定と環境ごとの設定
 
-`codex/config.toml`でモデル、推論の強さ、サービス設定、keymapを共有します。
+`codex/config.toml`でモデル、推論の強さ、サービス設定、keymap、CLIの完了通知を共有します。
 全環境へ反映する変更はこのファイルを編集してGitで共有します。
 `/etc/codex/config.toml`は、その環境の全ユーザーに適用されるため、個人用のWSL・Dev Containerを想定しています。
 
@@ -41,6 +41,13 @@ root以外で実行するDev Containerでは、対話なしで`sudo`を使える
 インストーラーはローカルの`config.toml`を変更しません。
 
 設定の優先順位は[公式ドキュメント](https://learn.chatgpt.com/docs/config-file/config-basic)を参照してください。
+
+## CLIの完了通知
+
+CLIは各ターンの応答完了時に、端末のフォーカス状態に関係なくOSC 9通知を送ります。
+VS Codeの統合ターミナルでは、[Terminal Notification](https://marketplace.visualstudio.com/items?itemName=wenbopan.vscode-terminal-osc-notifier)拡張を使用します。
+`codex-devcontainer-feature`を利用するDev Containerでは、この拡張もインストール対象になります。
+VS Code 1.93以上とShell Integrationの有効化が必要です。OS側でも通知を許可してください。
 
 ## 更新
 

@@ -5,8 +5,11 @@ description: Skillsを更新するコマンドを教える
 
 # Update Common Skills Command
 
-（作業中の `./.agents/skills/` に追加skillsがある場合、それらをリポジトリに追加するコマンドも教える。）
+skillsおよびcodexの設定ファイルを「更新」する手伝いをしてください。
 
-ユーザーに、現在の `~/.agents/skills/` にたいていbindされている共有skills/他設定リポジトリについて、その状態を確認し、
-ユーザーにそのリポジトリをpushして更新するコマンドを教える。
+現在の `~/.agents/skills/` には、たいてい共有skills/他設定リポジトリがbindされています。
 
+その状態を調べ、その設定を最新化するため、以下のためのコマンドを教えてください。
+- 作業中リポジトリの `./.agents/skills/` にあることもある、追加作成したskillsの同期
+- リモートの最新化
+- ローカルの最新化

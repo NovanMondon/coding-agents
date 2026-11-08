@@ -36,4 +36,4 @@ README記載の一般的な操作方法や規約を重視してください。
 
 ## GitHub
 
-`gh`および`curl`ではなく、GitHub MCPを使用すること。
+gh github cliを使用。

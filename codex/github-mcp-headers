@@ -1,0 +1,22 @@
+#!/bin/sh
+set +x
+set -eu
+export LC_ALL=C
+
+pat_file="${CODEX_HOME:-$HOME/.codex}/secrets/github-pat"
+
+fail() {
+  printf 'github-mcp: %s\n' "$*" >&2
+  exit 1
+}
+
+if [ ! -f "$pat_file" ] || [ ! -r "$pat_file" ]; then
+  fail 'PAT is not registered; run codex/set-github-pat from coding-agents'
+fi
+pat=$(cat -- "$pat_file") || fail 'could not read PAT'
+case "$pat" in
+  '' | *[!a-zA-Z0-9_]*) fail 'PAT must contain only ASCII letters, digits, and underscores' ;;
+esac
+
+# PAT の文字種を検証済みなので JSON のエスケープは不要。
+printf '{"Authorization":"Bearer %s"}\n' "$pat"

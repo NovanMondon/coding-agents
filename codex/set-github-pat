@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set +x
+set -euo pipefail
+export LC_ALL=C
+umask 077
+
+fail() {
+  printf 'github-mcp: %s\n' "$*" >&2
+  exit 1
+}
+
+if [ "$#" -ne 0 ]; then
+  fail 'run without arguments and enter the PAT at the hidden prompt'
+fi
+
+secrets_dir="${CODEX_HOME:-$HOME/.codex}/secrets"
+pat_file="$secrets_dir/github-pat"
+if [ -L "$secrets_dir" ] || [ -L "$pat_file" ]; then
+  fail 'the secrets directory and PAT file must not be symbolic links'
+fi
+if [ -e "$pat_file" ] && [ ! -f "$pat_file" ]; then
+  fail 'the PAT path is not a regular file'
+fi
+
+pat=''
+if ! IFS= read -r -s -p 'GitHub PAT (input hidden): ' pat </dev/tty; then
+  printf '\n' >&2
+  fail 'could not read PAT from the terminal'
+fi
+printf '\n' >&2
+case "$pat" in
+  '' | *[!a-zA-Z0-9_]*) fail 'PAT must contain only ASCII letters, digits, and underscores' ;;
+esac
+
+mkdir -p -- "$secrets_dir"
+chmod 700 -- "$secrets_dir"
+temporary_pat=$(mktemp "$secrets_dir/.github-pat.XXXXXX")
+trap 'rm -f -- "$temporary_pat"' EXIT
+trap 'exit 1' HUP INT TERM
+printf '%s\n' "$pat" >"$temporary_pat"
+unset pat
+chmod 600 -- "$temporary_pat"
+mv -fT -- "$temporary_pat" "$pat_file"
+printf 'github-mcp: PAT saved to %s; restart Codex to use it\n' "$pat_file"

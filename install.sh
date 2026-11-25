@@ -4,6 +4,7 @@ set -euo pipefail
 repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
 system_config="/etc/codex/config.toml"
+system_github_headers="/etc/codex/github-mcp-headers"
 
 check_link() {
   local source_path="$1"
@@ -42,17 +43,19 @@ create_link() {
 check_link "$repo_dir/AGENTS.md" "$codex_home/AGENTS.md"
 check_link "$repo_dir/codex/skills" "$HOME/.agents/skills"
 check_link "$repo_dir/codex/config.toml" "$system_config"
+check_link "$repo_dir/codex/github-mcp-headers" "$system_github_headers"
 
 # /etc への初回配置だけ管理者権限を使う
-if [ ! -L "$system_config" ]; then
+if [ ! -L "$system_config" ] || [ ! -L "$system_github_headers" ]; then
   system_command=()
   if [ "$EUID" -ne 0 ]; then
     if ! command -v sudo >/dev/null 2>&1; then
-      printf 'coding-agents: sudo is required to install %s\n' "$system_config" >&2
+      printf 'coding-agents: sudo is required to install links in /etc/codex\n' >&2
       exit 1
     fi
     system_command=(sudo)
   fi
+  create_link "$repo_dir/codex/github-mcp-headers" "$system_github_headers" "${system_command[@]}"
   create_link "$repo_dir/codex/config.toml" "$system_config" "${system_command[@]}"
 fi
 

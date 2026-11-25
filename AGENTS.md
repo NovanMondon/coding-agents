@@ -37,4 +37,4 @@ README記載の一般的な操作方法や規約を重視してください。
 
 ## GitHub
 
-gh github cliを使用。
+読み取り操作にgithub mcpを使用する。

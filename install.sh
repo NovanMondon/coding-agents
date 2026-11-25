@@ -72,3 +72,10 @@ if ! grep -Fqx "$update_command" "$bashrc"; then
   printf '\n%s\n' "$update_command" >>"$bashrc"
   printf 'coding-agents: added the update command to %s\n' "$bashrc"
 fi
+
+# GitHub MCP の登録状態を確認し、必要なら登録コマンドを表示する
+if ! "$system_github_headers" --check; then
+  printf 'coding-agents: GitHub MCPのPAT登録状態を確認してください。\n' >&2
+  printf 'coding-agents: PATを登録・更新するコマンド: %q\n' \
+    "$repo_dir/codex/set-github-pat" >&2
+fi

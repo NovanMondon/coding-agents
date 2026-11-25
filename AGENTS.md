@@ -37,4 +37,9 @@ README記載の一般的な操作方法や規約を重視してください。
 
 ## GitHub
 
-読み取り操作にgithub mcpを使用する。
+GitHubの読み取りには、共有設定の github MCP（mcp__github__*）を使用する。
+ChatGPT側のGitHub接続（mcp__codex_apps__github_*）で代替しない。
+github MCPが利用できない場合は、 `/etc/codex/github-mcp-headers --check` でPATの登録状態を確認する。
+スクリプトが存在しなければ共有設定のインストールを、PAT未登録なら共有リポジトリ内の `codex/set-github-pat` での登録を案内する。
+登録確認が成功しても接続できない場合は、PAT未登録と断定せず接続エラーを調べる。
+PATやAuthorizationヘッダーを表示しない。

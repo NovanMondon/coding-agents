@@ -18,5 +18,10 @@ case "$pat" in
   '' | *[!a-zA-Z0-9_]*) fail 'PAT must contain only ASCII letters, digits, and underscores' ;;
 esac
 
+if [ "$#" -eq 1 ] && [ "$1" = "--check" ]; then
+  exit 0
+fi
+[ "$#" -eq 0 ] || fail 'usage: github-mcp-headers [--check]'
+
 # PAT の文字種を検証済みなので JSON のエスケープは不要。
 printf '{"Authorization":"Bearer %s"}\n' "$pat"

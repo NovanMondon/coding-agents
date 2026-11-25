@@ -1,3 +1,7 @@
+approval_policy = "on-request"
+approvals_reviewer = "user"
+default_permissions = "my-default"
+
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
 service_tier = "default"
@@ -14,3 +18,14 @@ status_line_use_colors = true
 
 [features]
 tui_workspace = false
+
+[permissions.my-default]
+description = "Workspace development without command network access"
+extends = ":workspace"
+
+[permissions.my-default.network]
+enabled = false
+
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false

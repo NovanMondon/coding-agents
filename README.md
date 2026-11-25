@@ -72,3 +72,14 @@ Dev Container内の配置先は`~/.local/share/coding-agents`です。
 - `vendor/seraphr-agent-skills`: [seraphr/agent-skills](https://github.com/seraphr/agent-skills)のsubmodule
 
 自作skillsは[NovanMondon/agents-skills](https://github.com/NovanMondon/agents-skills)の`d2ab0c83c8b40e71ef958807ed4f5c8ee611ccd7`から移行しました。
+
+### 権限設定
+
+共通設定は、作業領域への書き込みを許可し、コマンドのネットワークアクセスを無効にする既定値を提供します。
+機密ファイルの読み取り禁止は一律には設定せず、必要な対象を各利用環境・プロジェクトで指定します。
+
+プロジェクト固有の設定は、信頼済みリポジトリの `.codex/config.toml` に置きます。
+リポジトリで共有する権限プロファイルは、個人用の `my-default` に依存せず、組み込みの `:workspace` を継承してください。
+別のプロファイルを選択した場合、`my-default` 内の設定は自動では引き継がれません。
+
+権限プロファイルは、旧方式の `sandbox_mode` や `sandbox_workspace_write` と併用しないでください。

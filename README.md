@@ -35,6 +35,7 @@ GitHub MCPのPATは環境ごとに登録します。未登録などの問題が�
 ```text
 ~/.codex/AGENTS.md -> coding-agents/AGENTS.md
 ~/.agents/skills   -> coding-agents/codex/skills
+~/.config/coding-agents/github-pat -> ~/.codex/secrets/github-pat
 /etc/codex/config.toml -> coding-agents/codex/config.toml
 /etc/codex/github-mcp-headers -> coding-agents/codex/github-mcp-headers
 ```

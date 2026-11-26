@@ -3,16 +3,20 @@ set +x
 set -eu
 export LC_ALL=C
 
-pat_file="${CODEX_HOME:-$HOME/.codex}/secrets/github-pat"
+pat_file="$HOME/.config/coding-agents/github-pat"
 
 fail() {
   printf 'github-mcp: %s\n' "$*" >&2
   exit 1
 }
 
-if [ ! -f "$pat_file" ] || [ ! -r "$pat_file" ]; then
+if [ ! -L "$pat_file" ]; then
+  fail 'PAT location link is missing; run install.sh from coding-agents'
+fi
+if [ ! -f "$pat_file" ]; then
   fail 'PAT is not registered; run codex/set-github-pat from coding-agents'
 fi
+[ -r "$pat_file" ] || fail 'PAT is not readable; check file ownership and permissions'
 pat=$(cat -- "$pat_file") || fail 'could not read PAT'
 case "$pat" in
   '' | *[!a-zA-Z0-9_]*) fail 'PAT must contain only ASCII letters, digits, and underscores' ;;
@@ -21,6 +25,7 @@ esac
 if [ "$#" -eq 1 ] && [ "$1" = "--check" ]; then
   exit 0
 fi
+
 [ "$#" -eq 0 ] || fail 'usage: github-mcp-headers [--check]'
 
 # PAT の文字種を検証済みなので JSON のエスケープは不要。

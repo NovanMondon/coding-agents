@@ -5,6 +5,8 @@ repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
 system_config="/etc/codex/config.toml"
 system_github_headers="/etc/codex/github-mcp-headers"
+pat_link="$HOME/.config/coding-agents/github-pat"
+pat_file="$(realpath -m -- "$codex_home")/secrets/github-pat"
 
 check_link() {
   local source_path="$1"
@@ -40,6 +42,7 @@ create_link() {
   printf 'coding-agents: linked %s -> %s\n' "$target_path" "$source_path"
 }
 
+check_link "$pat_file" "$pat_link"
 check_link "$repo_dir/AGENTS.md" "$codex_home/AGENTS.md"
 check_link "$repo_dir/codex/skills" "$HOME/.agents/skills"
 check_link "$repo_dir/codex/config.toml" "$system_config"
@@ -59,6 +62,7 @@ if [ ! -L "$system_config" ] || [ ! -L "$system_github_headers" ]; then
   create_link "$repo_dir/codex/config.toml" "$system_config" "${system_command[@]}"
 fi
 
+create_link "$pat_file" "$pat_link"
 create_link "$repo_dir/AGENTS.md" "$codex_home/AGENTS.md"
 create_link "$repo_dir/codex/skills" "$HOME/.agents/skills"
 

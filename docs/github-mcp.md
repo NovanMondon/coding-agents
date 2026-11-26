@@ -21,7 +21,7 @@ WSLの標準配置先は `~/coding-agents` 、Dev Container内は `~/.local/shar
 ## PATの発行・登録
 
 初回導入時は [READMEのインストール手順](../README.md#インストール) を実行してください。
-既存環境でも `/etc/codex/github-mcp-headers` がなければ、次のコマンドでリンクを追加します。
+既存環境でも次のコマンドを一度実行し、PATの保存先を示す固定リンクを追加してください。登録済みのPATはそのまま使えます。
 PATが未登録の場合は登録コマンドが表示されます。インストールは完了し、PAT入力を待つことはありません。
 
 ```bash
@@ -69,18 +69,20 @@ PATの更新には、利用する環境で初回と同じ登録コマンドを�
 PATは `${CODEX_HOME:-$HOME/.codex}/secrets/github-pat` に保存します。
 ホストや別コンテナの認証情報をコピーせず、利用する環境で登録してください。
 `codex-devcontainer-feature` を使う場合の保存先は `/var/lib/codex-home/secrets/github-pat` です。
-同じ永続ボリュームを使う再構築では保持され、ボリュームを削除した場合は再登録が必要です。
+同じ永続ボリュームを使う再構築では保持され、インストーラーが固定リンクを作り直します。ボリュームを削除した場合は再登録が必要です。
 
 ## 接続できない場合
 
 1. **確認コマンドがない**：共有リポジトリを更新し、そのルートで `./install.sh` を再実行してください。
-2. **登録確認が失敗する**：表示された理由を確認し、PATが未登録・不正なら `./codex/set-github-pat` で登録・更新してください。読み取り不可の場合は所有者と権限も確認します。
+2. **登録確認が失敗する**：固定リンクが未作成なら `./install.sh` を再実行します。PATが未登録・不正なら `./codex/set-github-pat` で登録・更新してください。読み取り不可の場合は所有者と権限も確認します。
 3. **登録確認は成功するが接続できない**：CodexのMCP接続エラーを確認します。PATの有効期限、Resource owner、対象リポジトリ、必要なRead権限、Organizationの承認状態、通信状態を確認してください。
 4. **ChatGPT側の接続だけ成功する**：PAT用MCPは未確認です。Codexを再起動して `mcp__github__*` が利用できるか確認し、利用できなければ上記の診断を行ってください。
 
 ## 接続の仕組み
 
 `/etc/codex/config.toml` の共有設定から、`https://api.githubcopilot.com/mcp/` に接続します。
-`http_headers_helper` が `/etc/codex/github-mcp-headers` を呼び、PATファイルからAuthorizationヘッダーを生成します。
+`http_headers_helper` が `/etc/codex/github-mcp-headers` を呼び、`~/.config/coding-agents/github-pat` の固定リンクからPATを読んでAuthorizationヘッダーを生成します。
+リンク先はインストール時の `${CODEX_HOME:-$HOME/.codex}/secrets/github-pat` です。helperに `CODEX_HOME` が渡らなくても同じPATを参照できます。
+同じOSユーザーでは一つのPAT保存先を使います。登録時の `CODEX_HOME` とリンク先が異なる場合は処理を止めるため、インストール時と同じ環境で登録してください。
 PATをシェルの環境変数に登録する必要はありません。保存時の権限は `secrets` ディレクトリが `700` 、PATファイルが `600` です。
 仕様は [CodexのHTTP MCP設定](https://learn.chatgpt.com/docs/extend/mcp#streamable-http-servers) を参照してください。

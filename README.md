@@ -107,7 +107,9 @@ VS Code 1.93以上、Shell Integration、OS側の通知許可が必要です。
 ## 開発
 
 開発用規約はルートの `AGENTS.md`、他環境へ配布する指示は `codex/AGENTS.md` です。
-機能追加は共通の自動反映経路と入口からのテストまで含めます。個別手動セットアップを追加するだけでは完了しません。
+機能追加は共通の自動反映経路への接続まで含めます。個別手動セットアップを追加するだけでは完了しません。
+個人用環境のため、自動テストはデータ破壊・認証情報の漏えいと消失・環境の起動不能など、致命的な問題の防止に絞ります。
+それ以外は変更に応じた構文チェックと必要な実操作での確認で済ませます。テスト追加やCIを一律の完了条件にはしません。
 
 | ファイル | 役割 |
 |---|---|
@@ -118,12 +120,12 @@ VS Code 1.93以上、Shell Integration、OS側の通知許可が必要です。
 | `vendor/seraphr-agent-skills` | 外部skillsのsubmodule |
 
 テストは一時ディレクトリを使い、実環境のホームや `/etc` を変更しません。
-次はリポジトリルートで実行します。npmを使って実パッケージをテスト用領域に取得してから、公開入口を検証します。
+既存テスト一式を実行する必要がある場合は、次をリポジトリルートで実行します。npmを使って実パッケージをテスト用領域に取得してから、公開入口を検証します。
 
 ```bash
 npm install --prefix /tmp/coding-agents-test-deps --ignore-scripts --no-audit --no-fund agent-rollback@1.1.1 &&
 CODING_AGENTS_TEST_ARB_PREFIX=/tmp/coding-agents-test-deps python3 -m unittest discover -s tests -v
 ```
 
-CIでは同じ検証を必須にします。Codex CLIの取得・実行はテスト用の代替を使い、有料のモデル呼び出しは行いません。
+Codex CLIの取得・実行はテスト用の代替を使い、有料のモデル呼び出しは行いません。
 `CODING_AGENTS_USER_DIR` と `CODING_AGENTS_SYSTEM_DIR` はテスト用の配置先指定です。通常の導入では指定しません。

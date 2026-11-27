@@ -3,7 +3,7 @@ set +x
 set -eu
 export LC_ALL=C
 
-pat_file="$HOME/.config/coding-agents/github-pat"
+pat_file="${CODING_AGENTS_USER_DIR:-$HOME}/.config/coding-agents/github-pat"
 
 fail() {
   printf 'github-mcp: %s\n' "$*" >&2
@@ -11,10 +11,10 @@ fail() {
 }
 
 if [ ! -L "$pat_file" ]; then
-  fail 'PAT location link is missing; run install.sh from coding-agents'
+  fail 'PAT location link is missing; run coding-agents sync'
 fi
 if [ ! -f "$pat_file" ]; then
-  fail 'PAT is not registered; run codex/set-github-pat from coding-agents'
+  fail 'PAT is not registered; run coding-agents sync'
 fi
 [ -r "$pat_file" ] || fail 'PAT is not readable; check file ownership and permissions'
 pat=$(cat -- "$pat_file") || fail 'could not read PAT'

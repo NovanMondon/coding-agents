@@ -10,8 +10,7 @@ Codexが利用する環境内でセットアップし、CLIと拡張が同じ `C
 この方式は、その環境から直接HTTP MCPへ接続する場合に対応します。別のremote executor経由の接続には使えません。
 Codexは `http_headers_helper` への対応が必要です。CLI 0.172.0と拡張同梱のCodex 0.171.0-alpha.13.2で設定の認識を確認しています。
 
-以下の `./` で始まるコマンドは、各環境の `coding-agents` リポジトリのルートで実行してください。
-WSLの標準配置先は `~/coding-agents` 、Dev Container内は `~/.local/share/coding-agents` です。
+導入・更新・PAT登録は任意のディレクトリから `coding-agents sync` を使います。
 
 既存のGitHub MCP設定がある場合は、PAT登録前にローカル・プロジェクト設定の `mcp_servers.github` を確認し、共通設定と競合する項目を取り除いてください。
 特に `bearer_token_env_var` 、`http_headers.Authorization` 、`env_http_headers.Authorization` と、以前のOAuth認証情報を併用しないでください。
@@ -20,13 +19,8 @@ WSLの標準配置先は `~/coding-agents` 、Dev Container内は `~/.local/shar
 
 ## PATの発行・登録
 
-初回導入時は [READMEのインストール手順](../README.md#インストール) を実行してください。
-既存環境でも次のコマンドを一度実行し、PATの保存先を示す固定リンクを追加してください。登録済みのPATはそのまま使えます。
-PATが未登録の場合は登録コマンドが表示されます。インストールは完了し、PAT入力を待つことはありません。
-
-```bash
-./install.sh
-```
+初回導入は [README](../README.md) の入口から行います。
+保存済みPATは自動で再利用します。未登録なら、自動反映は入力待ちにせず他の設定を進め、対話端末の `coding-agents sync` が非表示入力を案内します。
 
 fine-grained PATは一つの所有者を対象とします。会社のリポジトリなら、Resource ownerにそのOrganizationを指定します。
 複数Organizationを対象とする場合は、対象ごとにPATと接続設定を分けるなど、別の構成が必要です。
@@ -37,7 +31,7 @@ fine-grained PATは一つの所有者を対象とします。会社のリポジ�
 4. `Generate token` でPATを発行し、次のコマンドの非表示入力へ貼り付けます。PATを引数、チャット、共有設定には書かないでください。
 
 ```bash
-./codex/set-github-pat
+coding-agents sync --github-pat
 ```
 
 Organizationの承認が必要な場合は、承認を待ってから接続を確認してください。
@@ -60,10 +54,10 @@ ChatGPT側のGitHub接続（ `mcp__codex_apps__github_*` ）で取得できて�
 ## PATの更新と再構築
 
 PATの更新には、利用する環境で初回と同じ登録コマンドを実行します。
-入力の検証に失敗した場合、既存のPATは変更しません。登録後はCodexを再起動してください。
+入力の検証に失敗した場合、既存のPATは変更せず、反映未完了として報告します。登録後はCodexを再起動してください。
 
 ```bash
-./codex/set-github-pat
+coding-agents sync --github-pat
 ```
 
 PATは `${CODEX_HOME:-$HOME/.codex}/secrets/github-pat` に保存します。
@@ -73,8 +67,8 @@ PATは `${CODEX_HOME:-$HOME/.codex}/secrets/github-pat` に保存します。
 
 ## 接続できない場合
 
-1. **確認コマンドがない**：共有リポジトリを更新し、そのルートで `./install.sh` を再実行してください。
-2. **登録確認が失敗する**：固定リンクが未作成なら `./install.sh` を再実行します。PATが未登録・不正なら `./codex/set-github-pat` で登録・更新してください。読み取り不可の場合は所有者と権限も確認します。
+1. **確認コマンドがない**：`coding-agents sync` で設定を再反映してください。公開コマンド自体がない場合は [初回導入](../README.md#初回導入) の入口を使います。
+2. **登録確認が失敗する**：固定リンクが未作成なら `coding-agents sync` を実行します。PATが未登録・不正なら `coding-agents sync --github-pat` で登録・更新してください。読み取り不可の場合は所有者と権限も確認します。
 3. **登録確認は成功するが接続できない**：CodexのMCP接続エラーを確認します。PATの有効期限、Resource owner、対象リポジトリ、必要なRead権限、Organizationの承認状態、通信状態を確認してください。
 4. **ChatGPT側の接続だけ成功する**：PAT用MCPは未確認です。Codexを再起動して `mcp__github__*` が利用できるか確認し、利用できなければ上記の診断を行ってください。
 

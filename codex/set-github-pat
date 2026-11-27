@@ -13,11 +13,12 @@ if [ "$#" -ne 0 ]; then
   fail 'run without arguments and enter the PAT at the hidden prompt'
 fi
 
-secrets_dir="$(realpath -m -- "${CODEX_HOME:-$HOME/.codex}")/secrets"
+user_dir="${CODING_AGENTS_USER_DIR:-$HOME}"
+secrets_dir="$(realpath -m -- "${CODEX_HOME:-$user_dir/.codex}")/secrets"
 pat_file="$secrets_dir/github-pat"
-pat_link="$HOME/.config/coding-agents/github-pat"
+pat_link="$user_dir/.config/coding-agents/github-pat"
 if [ ! -L "$pat_link" ]; then
-  fail 'PAT location link is missing; run install.sh from coding-agents'
+  fail 'PAT location link is missing; run coding-agents sync'
 fi
 if [ "$(readlink -- "$pat_link")" != "$pat_file" ]; then
   fail 'PAT location link does not match CODEX_HOME; check CODEX_HOME and the installed link'

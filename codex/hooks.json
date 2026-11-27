@@ -1,0 +1,8 @@
+{
+  "hooks": {
+    "SessionStart": [{"hooks": [{"type": "command", "command": "/etc/codex/rollback-hook", "timeout": 180, "statusMessage": "Applying coding environment"}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": "/etc/codex/rollback-hook", "timeout": 30}]}],
+    "PreToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "/etc/codex/rollback-hook", "timeout": 30}]}],
+    "PostToolUse": [{"matcher": "*", "hooks": [{"type": "command", "command": "/etc/codex/rollback-hook", "timeout": 30}]}]
+  }
+}

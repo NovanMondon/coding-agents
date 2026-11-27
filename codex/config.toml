@@ -33,3 +33,6 @@ ignore_default_excludes = false
 [mcp_servers.github]
 url = "https://api.githubcopilot.com/mcp/"
 http_headers_helper = "/etc/codex/github-mcp-headers"
+
+[mcp_servers.agent-rollback]
+command = "/etc/codex/agent-rollback-mcp"

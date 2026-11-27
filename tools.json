@@ -1,0 +1,9 @@
+{
+  "node": "22",
+  "nvm": "0.40.7",
+  "devcontainer_feature": "1.2.0",
+  "packages": {
+    "@openai/codex": "latest",
+    "agent-rollback": "1.1.1"
+  }
+}

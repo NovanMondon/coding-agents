@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source_path="$(readlink -f -- "${BASH_SOURCE[0]}")"
+repo_dir="$(dirname -- "$(dirname -- "$source_path")")"
+exec python3 "$repo_dir/lib/environment.py" "$@"
